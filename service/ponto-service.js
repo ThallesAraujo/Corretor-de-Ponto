@@ -12,7 +12,6 @@ var pontosCorrigidos = [];
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 var wb;
 
-
 var mascara = new Inputmask("(99)9999-9999");
 mascara.mask(telefone);
 
@@ -47,7 +46,8 @@ removerPontosInvalidos = () => {
 function carregarPlanilha() {
 
     dialog.showOpenDialog({
-        properties: ['openFile']
+        properties: ['openFile'],
+        filters: [{name: 'Documents', extensions: ['xlsx']}]
     }, function (files) {
         if (files !== undefined) {
             console.log('Files', files[0]);
@@ -126,19 +126,34 @@ gravarNovaPlanilha = () =>{
     })
 
 
-    dialog.showSaveDialog((filename) => {
-        XLSX.writeFile(wb, `${filename}.xlsx`);
-        alert('Concluído!');
+    dialog.showSaveDialog(filename => {
+        XLSX.writeFile(wb, `${filename}.xlsx`, (err)=>{
+            if(err){
+                alert(err);
+            }else{
+                alert('Concluído!');
+            }
+        });
     });
 
 }
 
 exibirTodosOsPontos = () => {
-    let exibicao = '';
+    let exibicao = '<h1 class="feature-title">Todos os Pontos</h1>';
     pontos.forEach(ponto => {
-        exibicao += `<div> ${ponto[0]['valor']} | ${ponto[1]} - ${ponto[2]} - ${ponto[3]} - ${ponto[4]} - ${ponto[5]}<div>`;
+        exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
+                        <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-calendar" style="margin-right: 10px"></i> ${ponto[0]['valor']}</h3>
+                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[2]['celula']}" type='text' value="${ponto[2]['valor']}">
+                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[3]['celula']}" type='text' value="${ponto[3]['valor']}">
+                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[4]['celula']}" type='text' value="${ponto[4]['valor']}">
+                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[5]['celula']}" type='text' value="${ponto[5]['valor']}">
+                        <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
+                     </div>`;
     });
+
+    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
+    inicio.hide();
 }
 
 setarNovoPonto = (event) => {
@@ -185,7 +200,7 @@ exibirInconsistencias = () => {
                      </div>`;
     });
 
-    exibicao += '<input class="btn" onClick="gravarNovaPlanilha()" id="btnGravarPontos" type="button" value="Gerar planilha de pontos"></input>';
+    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
     inicio.hide();
 }
