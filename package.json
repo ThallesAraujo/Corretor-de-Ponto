@@ -1,0 +1,23 @@
+{
+  "name": "corretor-de-ponto",
+  "version": "0.0.1",
+  "main": "main.js",
+  "author": "thalles",
+  "scripts": {
+    "start": "electron main.js",
+    "package-mac": "electron-packager . corretor-de-ponto-mac --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "package-windows": "electron-packager . corretor-de-ponto-windows --overwrite --asar=true --platform=win32 --arch=ia32  --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"WS-FrontEnd\"",
+    "package-linux": "electron-packager . corretor-de-ponto --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.2",
+    "electron-packager": "^13.1.1",
+    "electron-prebuilt": "^1.4.13"
+  },
+  "dependencies": {
+    "inputmask": "^4.0.8",
+    "jquery": "^3.4.0",
+    "twilio": "^3.30.2",
+    "xlsx-style": "^0.8.13"
+  }
+}
