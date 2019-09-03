@@ -3,6 +3,7 @@ const XLSX = require('xlsx-style');
 var $ = require('jquery')
 var Inputmask = require('inputmask');
 var dialog = require('electron').remote.dialog;
+const criarExibicaoPonto = require('../view/ajuste-ponto-template.js').criarExibicaoPonto;
 
 const telefone = $('#telefone');
 const divPontos = $('#pontos');
@@ -141,14 +142,8 @@ gravarNovaPlanilha = () =>{
 exibirTodosOsPontos = () => {
     let exibicao = '<h1 class="feature-title">Todos os Pontos</h1>';
     pontos.forEach(ponto => {
-        exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
-                        <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-calendar" style="margin-right: 10px"></i> ${ponto[0]['valor']}</h3>
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[2]['celula']}" type='text' value="${ponto[2]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[3]['celula']}" type='text' value="${ponto[3]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[4]['celula']}" type='text' value="${ponto[4]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[5]['celula']}" type='text' value="${ponto[5]['valor']}">
-                        <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
-                     </div>`;
+        console.log(criarExibicaoPonto.type)
+        exibicao += criarExibicaoPonto(ponto);
     });
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
@@ -196,14 +191,7 @@ exibirInconsistencias = () => {
     let exibicao = '<h1 class="feature-title"><i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer" onClick="voltarInicio()"></i>Inconsistências</h1>';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
-        exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
-                        <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-calendar" style="margin-right: 10px"></i> ${ponto[0]['valor']}</h3>
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[2]['celula']}" type='text' value="${ponto[2]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[3]['celula']}" type='text' value="${ponto[3]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[4]['celula']}" type='text' value="${ponto[4]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[5]['celula']}" type='text' value="${ponto[5]['valor']}">
-                        <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
-                     </div>`;
+        exibicao += criarExibicaoPonto(ponto);
     });
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
