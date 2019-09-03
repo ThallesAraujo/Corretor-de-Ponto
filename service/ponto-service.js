@@ -68,7 +68,6 @@ function carregarPlanilha() {
                     };
 
                     ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', celula };
-
                     cont++;
                 }
                 if (ponto['isValido']) {
