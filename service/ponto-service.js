@@ -27,8 +27,6 @@ $('#btnCarregar').click(() => {
 })
 
 
-
-
 $('#btnConverterPlanilha').click(() => {
     let win = new BrowserWindow({ width: 1500, height: 800 })
     win.loadURL('https://www.docspal.com/convert/xls-to-xlsx');
@@ -44,6 +42,8 @@ removerPontosInvalidos = () => {
 }
 
 function carregarPlanilha() {
+    pontos  = [];
+    pontosCorrigidos = [];
 
     dialog.showOpenDialog({
         properties: ['openFile'],
@@ -186,8 +186,14 @@ corrigirPonto = (celula, novoValor) => {
     console.log('Pontos corrigidos', pontosCorrigidos);
 }
 
+voltarInicio = (event) => {
+    divPontos.hide();
+    divPontos.html('');
+    inicio.show();
+}
+
 exibirInconsistencias = () => {
-    let exibicao = '<h1 class="feature-title">Inconsistências</h1>';
+    let exibicao = '<h1 class="feature-title"><i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer" onClick="voltarInicio()"></i>Inconsistências</h1>';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
         exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
@@ -202,5 +208,6 @@ exibirInconsistencias = () => {
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
+    divPontos.show();
     inicio.hide();
 }
