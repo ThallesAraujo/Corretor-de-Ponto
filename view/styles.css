@@ -103,6 +103,30 @@ input:active, input:focus{
   color: #6ca55d;
 }
 
+.tab{
+  min-width: 300px;
+  height: 30px;
+  text-align: center;
+  padding-top: 1%;
+  cursor: pointer;
+}
+
+.tab-active{
+  border-radius: 20px 20px 0 0;
+  background-color: #6ca55d;
+  color:#214643;
+  border-bottom: none;
+}
+
+.tab-inactive{
+  color: #6ca55d;;
+}
+
+.tab-container{
+  border-bottom: 2px solid #6ca55d;
+  display: flex;
+}
+
 
 .spinner-blur {
   width: 100vw;
