@@ -83,7 +83,8 @@ function carregarPlanilha() {
             }
             removerPontosInvalidos();
             inicio.hide();
-            telaPontos.removeAttr('hidden');
+            telaPontos.attr('hidden', false);
+            divPontos.show();
             exibirInconsistencias();
         }
     });
@@ -188,6 +189,7 @@ corrigirPonto = (celula, novoValor) => {
 voltarInicio = (event) => {
     divPontos.hide();
     divPontos.html('');
+    telaPontos.attr('hidden', true);
     inicio.show();
 }
 
@@ -197,7 +199,7 @@ switchTabs = (active, inactive) =>{
 }
 
 exibirInconsistencias = () => {
-    let exibicao = '<i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer" onClick="voltarInicio()"></i>';
+    let exibicao = '';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
         exibicao += criarExibicaoPonto(ponto);
