@@ -63,7 +63,7 @@ function carregarPlanilha() {
             let ponto = {};
             let cont = 0;
             while (cellCont < 50) {
-                while (cont < 6) {
+                while (cont < 10) {
                     let celula = colunas[cont] + cellCont;
                     ponto['isValido'] = true;
                     if (!planilha[celula] && cont === 1) {
@@ -71,6 +71,7 @@ function carregarPlanilha() {
                     };
 
                     ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', celula };
+                    ponto['linha'] = celula.substring(1,3);
                     cont++;
                 }
                 if (ponto['isValido']) {
