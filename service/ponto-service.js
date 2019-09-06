@@ -4,6 +4,7 @@ var $ = require('jquery')
 var Inputmask = require('inputmask');
 var dialog = require('electron').remote.dialog;
 const criarExibicaoPonto = require('../view/ajuste-ponto-template.js').criarExibicaoPonto;
+const criarLinhaPreviewPlanilha = require('../view/ajuste-ponto-template.js').criarLinhaPreviewPlanilha;
 
 const telefone = $('#telefone');
 const divPontos = $('#pontos');
@@ -12,9 +13,14 @@ const guiaTdsPontos = $('#guia-tds-pontos');
 const guiaInconsistencias = $('#guia-inconsistencias');
 const inicio = $('#inicio');
 var pontos = [];
+var copiaPontos = [];
 var pontosCorrigidos = [];
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 var wb;
+var estiloPontoCorrigido = { 
+    font: { color: { rgb: 'FFB51F1F' }}, 
+    fill: { fgColor: { rgb: "FFFCC3B3"}}
+}
 
 var mascara = new Inputmask("(99)9999-9999");
 mascara.mask(telefone);
@@ -47,7 +53,6 @@ removerPontosInvalidos = () => {
 
 function carregarPlanilha() {
     pontos  = [];
-    pontosCorrigidos = [];
 
     dialog.showOpenDialog({
         properties: ['openFile'],
@@ -61,13 +66,16 @@ function carregarPlanilha() {
             inicio.hide();
             telaPontos.attr('hidden', false);
             divPontos.show();
+            if(!copiaPontos.length){
+                copiaPontos = pontos;
+            }
             exibirInconsistencias();
         }
     });
 }
 
 carregarPontosPlanilha = () => {
-
+    pontos  = [];
     var planilha = wb.Sheets.Sheet1;
             console.log('Workbook', planilha);
             cellCont = 16;
@@ -81,7 +89,9 @@ carregarPontosPlanilha = () => {
                         ponto['isValido'] = false;
                     };
 
-                    ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', celula };
+                    ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', 
+                    celula , 
+                    estilo: planilha[celula] && planilha[celula]['s'] !== undefined ?'color: B51F1F; background-color: FCC3B3;': 'border: 1px solid white'};
                     ponto['linha'] = celula.substring(1,3);
                     cont++;
                 }
@@ -131,6 +141,7 @@ gravarNovaPlanilha = () =>{
 }
 
 exibirTodosOsPontos = () => {
+    carregarPontosPlanilha();
     let exibicao = '';
     pontos.forEach(ponto => {
         exibicao += criarExibicaoPonto(ponto);
@@ -161,7 +172,7 @@ marcarDebitoBancoHoras = (event) => {
 }
 
 corrigirPonto = (celula, novoValor) => {
-    let linhaPonto = celula.substring(1, 3);
+    let linhaPonto = celula.substring(1,3);
     wb.Sheets.Sheet1['A' + linhaPonto] = { 
         'v': wb.Sheets.Sheet1['A' + linhaPonto]['v'], 
         's': { 
@@ -178,6 +189,7 @@ corrigirPonto = (celula, novoValor) => {
             alignment: { wrapText: true }
         };
 
+        console.log(wb.Sheets.Sheet1[celula]);
     
 }
 
@@ -193,13 +205,26 @@ switchTabs = (active, inactive) =>{
     inactive.removeClass('tab-active').addClass('tab-inactive');
 }
 
+exibirPreviewPlanilha = () => {
+    carregarPontosPlanilha();
+    let exibicao = '<table style="color: white">';
+    pontos.forEach(ponto =>{
+        exibicao += criarLinhaPreviewPlanilha(ponto);
+    });
+
+    exibicao += '</table>'
+    divPontos.html(exibicao);
+    console.log(exibicao);
+}
+
 exibirInconsistencias = () => {
     let exibicao = '';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
         exibicao += criarExibicaoPonto(ponto);
     });
-    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
+    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>
+    <input class="btn" onClick="exibirPreviewPlanilha()" type="button" value="Visualizar Planilha"></input>`;
     divPontos.html(exibicao);
     console.log('Inconsistencias', inconsistencias);
     switchTabs(guiaInconsistencias, guiaTdsPontos);
