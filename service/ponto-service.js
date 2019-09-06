@@ -57,7 +57,18 @@ function carregarPlanilha() {
             console.log('Files', files[0]);
             wb = XLSX.readFile(files[0]);
             wb.cellStyles = true;
-            var planilha = wb.Sheets.Sheet1;
+            carregarPontosPlanilha();
+            inicio.hide();
+            telaPontos.attr('hidden', false);
+            divPontos.show();
+            exibirInconsistencias();
+        }
+    });
+}
+
+carregarPontosPlanilha = () => {
+
+    var planilha = wb.Sheets.Sheet1;
             console.log('Workbook', planilha);
             cellCont = 16;
             let ponto = {};
@@ -83,12 +94,7 @@ function carregarPlanilha() {
                 cont = 0;
             }
             removerPontosInvalidos();
-            inicio.hide();
-            telaPontos.attr('hidden', false);
-            divPontos.show();
-            exibirInconsistencias();
-        }
-    });
+
 }
 
 gravarNovaPlanilha = () =>{
@@ -110,27 +116,6 @@ gravarNovaPlanilha = () =>{
     wb.Sheets.Sheet1['!cols'] = wscols;
 
     wb.cellStyles = true;
-    pontosCorrigidos.forEach(ponto => {
-        let linhaPonto = ponto['celula'].substring(1, 3);
-        wb.Sheets.Sheet1['A' + linhaPonto] = { 
-            'v': wb.Sheets.Sheet1['A' + linhaPonto]['v'], 
-            's': { 
-                font: { color: { rgb: 'FFB51F1F' } }, 
-                fill: { fgColor: { rgb: "FFFCC3B3"}}},
-            };
-        
-        wb.Sheets.Sheet1[ponto['celula']] = { 
-            'v': ponto['valor'], 
-            's': { 
-                font: { color: { rgb: 'FFB51F1F' } }, 
-                fill: { fgColor: { rgb: "FFFCC3B3" } } },
-                alignment: { wrapText: true }
-            };
-
-
-        console.log('célula atual da planilha', wb.Sheets.Sheet1[ponto['celula']]['v']);
-        console.log('célula ponto corrigido', ponto['valor']);
-    })
 
 
     dialog.showSaveDialog(filename => {
@@ -171,20 +156,29 @@ marcarDebitoBancoHoras = (event) => {
         cont++;
     }
 
-    pontosCorrigidos.push({ celula: 'K' + linha, valor: 'Débito Banco Horas' });
+    corrigirPonto('K' + linha,'Débito Banco Horas');
     $(`#div${event.target.id}`).hide();
 }
 
 corrigirPonto = (celula, novoValor) => {
-    let indicePonto = pontosCorrigidos.indexOf(pontosCorrigidos.find(ponto => ponto.celula === celula));
-    let pontoCorrigido = { celula, valor: novoValor };
-    if (indicePonto > -1) {
-        pontosCorrigidos[indicePonto] = pontoCorrigido;
-    } else {
-        pontosCorrigidos.push(pontoCorrigido);
-    }
-    console.log('Novo ponto', { celula: event.target.id, valor: novoValor });
-    console.log('Pontos corrigidos', pontosCorrigidos);
+    let linhaPonto = celula.substring(1, 3);
+    wb.Sheets.Sheet1['A' + linhaPonto] = { 
+        'v': wb.Sheets.Sheet1['A' + linhaPonto]['v'], 
+        's': { 
+            font: { color: { rgb: 'FFB51F1F' } }, 
+            fill: { fgColor: { rgb: "FFFCC3B3"}}},
+        };
+
+    
+    wb.Sheets.Sheet1[celula] = { 
+        'v': novoValor, 
+        's': { 
+            font: { color: { rgb: 'FFB51F1F' } }, 
+            fill: { fgColor: { rgb: "FFFCC3B3" } } },
+            alignment: { wrapText: true }
+        };
+
+    
 }
 
 voltarInicio = (event) => {
