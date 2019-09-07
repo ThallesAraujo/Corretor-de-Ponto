@@ -22,8 +22,8 @@
 
         </div>
         <div id="tela-pontos" hidden="true">
-          <div class="actions">
-              <i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer; font-size: 30px; padding: 2%; color: #aac7a2" title="Voltar p/ tela inicial" onClick="voltarInicio()"></i>
+          <div class="navbar">
+              <i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer; font-size: 30px; color: #aac7a2" title="Voltar p/ tela inicial" onClick="voltarInicio()"></i>
           </div>
           <div class="tab-container">
             <div id="guia-inconsistencias" onclick="exibirInconsistencias()" class="tab">Inconsistências
@@ -31,8 +31,11 @@
           <div id="guia-tds-pontos" onclick="exibirTodosOsPontos()" class="tab tab-inactive">
             Todos os Pontos
           </div>
+          <div id="guia-preview-planilha" onclick="exibirPreviewPlanilha()" class="tab tab-inactive">
+            Pré-visualizar Planilha
           </div>
-          <div id="pontos">
+          </div>
+          <div style="margin: 2%" id="pontos">
           </div>
         </div>
     

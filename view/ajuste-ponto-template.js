@@ -31,16 +31,17 @@ module.exports = {
     criarLinhaPreviewPlanilha: function(ponto){
         return `
         <tr>
-            <td style='${ponto[0]['estilo']}'>${ponto[0]['valor'] !== 'Sem Ponto'? ponto[0]['valor']: ''}</td>
-            <td style='${ponto[1]['estilo']}'>${ponto[1]['valor'] !== 'Sem Ponto'? ponto[1]['valor']: ''}</td>
-            <td style='${ponto[2]['estilo']}'>${ponto[2]['valor'] !== 'Sem Ponto'? ponto[2]['valor']: ''}</td>
-            <td style='${ponto[3]['estilo']}'>${ponto[3]['valor'] !== 'Sem Ponto'? ponto[3]['valor']: ''}</td>
-            <td style='${ponto[4]['estilo']}'>${ponto[4]['valor'] !== 'Sem Ponto'? ponto[4]['valor']: ''}</td>
-            <td style='${ponto[5]['estilo']}'>${ponto[5]['valor'] !== 'Sem Ponto'? ponto[5]['valor']: ''}</td>
-            <td style='${ponto[6]['estilo']}'>${ponto[6]['valor'] !== 'Sem Ponto'? ponto[6]['valor']: ''}</td>
-            <td style='${ponto[7]['estilo']}'>${ponto[7]['valor'] !== 'Sem Ponto'? ponto[7]['valor']: ''}</td>
-            <td style='${ponto[8]['estilo']}'>${ponto[8]['valor'] !== 'Sem Ponto'? ponto[8]['valor']: ''}</td>
-            <td style='${ponto[9]['estilo']}'>${ponto[9]['valor'] !== 'Sem Ponto'? ponto[9]['valor']: ''}</td>
+            <td style='${ponto[0]['estilo']}'>${ponto[0]['valor'] !== 'Sem Ponto'? ponto[0]['valor']: '-------'}</td>
+            <td style='${ponto[1]['estilo']}'>${ponto[1]['valor'] !== 'Sem Ponto'? ponto[1]['valor']: '-------'}</td>
+            <td style='${ponto[2]['estilo']}'>${ponto[2]['valor'] !== 'Sem Ponto'? ponto[2]['valor']: '-------'}</td>
+            <td style='${ponto[3]['estilo']}'>${ponto[3]['valor'] !== 'Sem Ponto'? ponto[3]['valor']: '-------'}</td>
+            <td style='${ponto[4]['estilo']}'>${ponto[4]['valor'] !== 'Sem Ponto'? ponto[4]['valor']: '-------'}</td>
+            <td style='${ponto[5]['estilo']}'>${ponto[5]['valor'] !== 'Sem Ponto'? ponto[5]['valor']: '-------'}</td>
+            <td style='${ponto[6]['estilo']}'>${ponto[6]['valor'] !== 'Sem Ponto'? ponto[6]['valor']: '-------'}</td>
+            <td style='${ponto[7]['estilo']}'>${ponto[7]['valor'] !== 'Sem Ponto'? ponto[7]['valor']: '-------'}</td>
+            <td style='${ponto[8]['estilo']}'>${ponto[8]['valor'] !== 'Sem Ponto'? ponto[8]['valor']: '-------'}</td>
+            <td style='${ponto[9]['estilo']}'>${ponto[9]['valor'] !== 'Sem Ponto'? ponto[9]['valor']: '-------'}</td>
+            <td style='${ponto[10]['estilo']}'>${ponto[10]['valor'] !== 'Sem Ponto'? ponto[10]['valor']: '-------'}</td>
         </tr>
         `
     }

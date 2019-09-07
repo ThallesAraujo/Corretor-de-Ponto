@@ -11,11 +11,12 @@ const divPontos = $('#pontos');
 const telaPontos = $('#tela-pontos');
 const guiaTdsPontos = $('#guia-tds-pontos');
 const guiaInconsistencias = $('#guia-inconsistencias');
+const guiaPreview = $('#guia-preview-planilha')
 const inicio = $('#inicio');
 var pontos = [];
 var copiaPontos = [];
 var pontosCorrigidos = [];
-var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 var wb;
 var estiloPontoCorrigido = { 
     font: { color: { rgb: 'FFB51F1F' }}, 
@@ -82,7 +83,7 @@ carregarPontosPlanilha = () => {
             let ponto = {};
             let cont = 0;
             while (cellCont < 50) {
-                while (cont < 10) {
+                while (cont < 11) {
                     let celula = colunas[cont] + cellCont;
                     ponto['isValido'] = true;
                     if (!planilha[celula] && cont === 1) {
@@ -149,7 +150,7 @@ exibirTodosOsPontos = () => {
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
-    switchTabs(guiaTdsPontos, guiaInconsistencias);
+    switchTabs(guiaTdsPontos, guiaInconsistencias, guiaPreview);
     
 }
 
@@ -200,9 +201,11 @@ voltarInicio = (event) => {
     inicio.show();
 }
 
-switchTabs = (active, inactive) =>{
+switchTabs = (active, ...inactives) =>{
     active.addClass('tab-active').removeClass('tab-inactive');
-    inactive.removeClass('tab-active').addClass('tab-inactive');
+    inactives.forEach(inactive =>{
+        inactive.removeClass('tab-active').addClass('tab-inactive');
+    })
 }
 
 exibirPreviewPlanilha = () => {
@@ -213,6 +216,7 @@ exibirPreviewPlanilha = () => {
     });
 
     exibicao += '</table>'
+    switchTabs(guiaPreview, guiaInconsistencias, guiaTdsPontos);
     divPontos.html(exibicao);
     console.log(exibicao);
 }
@@ -223,9 +227,8 @@ exibirInconsistencias = () => {
     inconsistencias.forEach(ponto => {
         exibicao += criarExibicaoPonto(ponto);
     });
-    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>
-    <input class="btn" onClick="exibirPreviewPlanilha()" type="button" value="Visualizar Planilha"></input>`;
+    exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
     console.log('Inconsistencias', inconsistencias);
-    switchTabs(guiaInconsistencias, guiaTdsPontos);
+    switchTabs(guiaInconsistencias, guiaTdsPontos, guiaPreview);
 }
