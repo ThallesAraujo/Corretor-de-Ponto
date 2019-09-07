@@ -1,32 +1,39 @@
 <html>
 <link rel="stylesheet" href="styles.css">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Corretor de Ponto</title>
-  </head>
+  <meta charset="UTF-8">
+  <title>Corretor de Ponto</title>
+</head>
+
 <body>
   <div class="message" id="message"></div>
   <div id="spinner" class="spinner" style="display:none"></div>
   <div id="content" class="container">
-      <form>
+    <form>
 
-        <div id="inicio" style="text-align: center; padding-top: 15%;">
-          <i class="fa fa-clock" style="font-size: 100px; color: #6ca55d"></i>
-          <h1 class="feature-title">Bem vindo ao Corretor de Ponto!</h1>
-          <p>Para começar, converta o arquivo de planilha do Portal Horas ou, 
-            caso já o tenha feito, carregue-o para a detecção das inconsistências</p>
-            <div style="text-align: center">
-                <input class="btn" id="btnConverterPlanilha" type="button" value="Converter Planilha"></input>
-                <input class="btn" id="btnCarregar"  type="button" value="Carregar Planilha"></input>
-              </div>
-
+      <div id="inicio" style="text-align: center; padding-top: 15%;">
+        <i class="fa fa-clock" style="font-size: 100px; color: #6ca55d"></i>
+        <h1 class="feature-title">Bem vindo ao Corretor de Ponto!</h1>
+        <p>Para começar, converta o arquivo de planilha do Portal Horas ou,
+          caso já o tenha feito, carregue-o para a detecção das inconsistências</p>
+        <div style="text-align: center">
+          <input class="btn" id="btnConverterPlanilha" type="button" value="Converter Planilha"></input>
+          <input class="btn" id="btnCarregar" type="button" value="Carregar Planilha"></input>
         </div>
-        <div id="tela-pontos" hidden="true">
-          <div class="navbar">
-              <i class="fas fa-arrow-left" style="margin-right: 10px; cursor: pointer; font-size: 30px; color: #aac7a2" title="Voltar p/ tela inicial" onClick="voltarInicio()"></i>
+
+      </div>
+      <div id="tela-pontos" hidden="true">
+        <div class="navbar">
+          <i class="fas fa-arrow-left" id="action-icon" title="Voltar p/ tela inicial" onclick="voltarInicio()"></i>
+          <div class="actions">
+
+            <i class="fas fa-eye" id="btnAlternarExibicao" onclick="alternarExibicao()" title="Exibição Completa"></i>
+            <i class="fas fa-save" id="action-icon" onclick="gravarNovaPlanilha()" title="Gerar Planilha de Pontos"></i>
           </div>
-          <div class="tab-container">
-            <div id="guia-inconsistencias" onclick="exibirInconsistencias()" class="tab">Inconsistências
+        </div>
+        <div class="tab-container">
+          <div id="guia-inconsistencias" onclick="exibirInconsistencias()" class="tab">Inconsistências
           </div>
           <div id="guia-tds-pontos" onclick="exibirTodosOsPontos()" class="tab tab-inactive">
             Todos os Pontos
@@ -34,16 +41,17 @@
           <div id="guia-preview-planilha" onclick="exibirPreviewPlanilha()" class="tab tab-inactive">
             Pré-visualizar Planilha
           </div>
-          </div>
-          <div style="margin: 2%" id="pontos">
-          </div>
         </div>
-    
-      </form>
-    </div>
+        <div style="margin: 2%" id="pontos">
+        </div>
+      </div>
+
+    </form>
+  </div>
 </body>
 <script>
-    require('./ajuste-ponto-template.js');
-    require('../service/ponto-service.js');
+  require('./ajuste-ponto-template.js');
+  require('../service/ponto-service.js');
 </script>
+
 </html>

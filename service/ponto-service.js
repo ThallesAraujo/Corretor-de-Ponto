@@ -1,12 +1,11 @@
 const BrowserWindow = require('electron').remote.BrowserWindow;
 const XLSX = require('xlsx-style');
 var $ = require('jquery')
-var Inputmask = require('inputmask');
 var dialog = require('electron').remote.dialog;
 const criarExibicaoPonto = require('../view/ajuste-ponto-template.js').criarExibicaoPonto;
 const criarLinhaPreviewPlanilha = require('../view/ajuste-ponto-template.js').criarLinhaPreviewPlanilha;
+const criarExibicaoOitoPontos = require('../view/ajuste-ponto-template.js').criarExibicaoOitoPontos;
 
-const telefone = $('#telefone');
 const divPontos = $('#pontos');
 const telaPontos = $('#tela-pontos');
 const guiaTdsPontos = $('#guia-tds-pontos');
@@ -14,23 +13,11 @@ const guiaInconsistencias = $('#guia-inconsistencias');
 const guiaPreview = $('#guia-preview-planilha')
 const inicio = $('#inicio');
 var pontos = [];
+var exibicaoAtiva = () =>{};
+var exibicaoCompleta = false;
 var copiaPontos = [];
-var pontosCorrigidos = [];
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 var wb;
-var estiloPontoCorrigido = { 
-    font: { color: { rgb: 'FFB51F1F' }}, 
-    fill: { fgColor: { rgb: "FFFCC3B3"}}
-}
-
-var mascara = new Inputmask("(99)9999-9999");
-mascara.mask(telefone);
-
-telefone.keyup(function (event) {
-    if (event.keyCode === 13) {
-        enviarMensagem();
-    }
-});
 
 
 $('#btnCarregar').click(() => {
@@ -141,11 +128,22 @@ gravarNovaPlanilha = () =>{
 
 }
 
+alternarExibicao = () =>{
+    exibicaoCompleta = !exibicaoCompleta;
+    $('#btnAlternarExibicao').attr('title', exibicaoCompleta? 'Alternar p/ Exibição Simplificada': 'Alternar p/ Exibição Completa');
+    exibicaoAtiva();
+}
+
 exibirTodosOsPontos = () => {
+    exibicaoAtiva = exibirTodosOsPontos;
     carregarPontosPlanilha();
     let exibicao = '';
     pontos.forEach(ponto => {
-        exibicao += criarExibicaoPonto(ponto);
+        if(exibicaoCompleta){
+            exibicao += criarExibicaoOitoPontos(ponto);
+        }else{
+            exibicao += criarExibicaoPonto(ponto);
+        }
     });
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
@@ -209,6 +207,7 @@ switchTabs = (active, ...inactives) =>{
 }
 
 exibirPreviewPlanilha = () => {
+    exibicaoAtiva = exibirPreviewPlanilha;
     carregarPontosPlanilha();
     let exibicao = '<table style="color: white">';
     pontos.forEach(ponto =>{
@@ -222,10 +221,15 @@ exibirPreviewPlanilha = () => {
 }
 
 exibirInconsistencias = () => {
+    exibicaoAtiva = exibirInconsistencias;
     let exibicao = '';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
-        exibicao += criarExibicaoPonto(ponto);
+        if(exibicaoCompleta){
+            exibicao += criarExibicaoOitoPontos(ponto);
+        }else{
+            exibicao += criarExibicaoPonto(ponto);
+        }
     });
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
