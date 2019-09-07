@@ -32,7 +32,7 @@ module.exports = {
                             </div>
                             <div>
                             <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-exclamation-triangle" style="margin-right: 10px"></i>Evento</h3>
-                                <input onKeyUp="setarNovoPonto(event)" id="${ponto[10]['celula']}" type='text' value="${ponto[10]['valor']}">
+                                <input onKeyUp="setarNovoPonto(event)" id="${ponto[10]['celula']}" type='text' value="${ponto[10]['valor']=== 'Sem Ponto'? 'Digite uma justificativa...': ponto[10]['valor']}">
                             </div>
                             <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
                          </div>`
