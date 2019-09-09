@@ -167,7 +167,7 @@ marcarDebitoBancoHoras = (event) => {
     }
 
     corrigirPonto('K' + linha,'Débito Banco Horas');
-    $(`#div${event.target.id}`).hide();
+    exibicaoAtiva();
 }
 
 corrigirPonto = (celula, novoValor) => {
