@@ -19,6 +19,7 @@ pages:
     - master
 
 build:
+  image: node:4.2.2
   stage: build
   script:
     - npm i
