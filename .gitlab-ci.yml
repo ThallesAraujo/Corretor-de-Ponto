@@ -19,9 +19,10 @@ pages:
     - master
 
 build:
-  image: node:10.16.0
+  image: ubuntu:trusty
   stage: build
   script:
+    - apt-get install -y --no-install-recommends wine node
     - npm i
     - npm run package-windows
     - npm run package-mac
