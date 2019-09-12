@@ -22,7 +22,11 @@ build:
   image: ubuntu:trusty
   stage: build
   script:
-    - apt-get install -y --no-install-recommends wine node
+    - apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+    - apt-get install curl
+    - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    - sudo apt-get update
+    - apt-get install -y --no-install-recommends wine nodejs
     - npm i
     - npm run package-windows
     - npm run package-mac
