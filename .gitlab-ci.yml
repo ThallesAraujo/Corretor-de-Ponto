@@ -19,12 +19,12 @@ pages:
     - master
 
 build:
-  image: ubuntu:xenial
+  image: ubuntu:trusty
   stage: build
   script:
     - apt-get update
     - apt-get install -y software-properties-common
-    - apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
+    - apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ trusty main'
     - apt-get install -y curl gnupg apt-transport-https
     - curl -sL https://deb.nodesource.com/setup_10.x | -E bash -
     - apt-get update
