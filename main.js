@@ -8,7 +8,7 @@ let mainWindow;
 
 app.on('ready', function() {
     
-    mainWindow = new BrowserWindow({width: 1000, height: 700, webPreferences: {webSecurity: false,plugins:
+    mainWindow = new BrowserWindow({width: 1350, height: 760, webPreferences: {webSecurity: false,plugins:
         true,nodeIntegration: true}});
  
     mainWindow.loadURL('file://' + __dirname + '/view/index.html');
