@@ -19,7 +19,7 @@ pages:
     - master
 
 build:
-  image: corretor-ponto
+  image: corretor-de-ponto
   stage: build
   script:
     - npm i
