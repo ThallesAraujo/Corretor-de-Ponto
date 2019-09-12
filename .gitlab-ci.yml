@@ -26,8 +26,7 @@ build:
     - apt-get install -y software-properties-common
     - apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ trusty main'
     - apt-get install -y curl gnupg apt-transport-https
-    - curl -sL https://deb.nodesource.com/setup_10.x | -E bash -
-    - apt-get update
+    - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     - apt-get update && apt-get install --install-recommends wine-devel
     - apt-get install -y --no-install-recommends nodejs
     - npm i
