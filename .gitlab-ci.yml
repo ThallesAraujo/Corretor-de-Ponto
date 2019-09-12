@@ -22,6 +22,7 @@ build:
   image: ubuntu:trusty
   stage: build
   script:
+    - apt-get update
     - apt-get install software-properties-common
     - apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
     - apt-get install curl
