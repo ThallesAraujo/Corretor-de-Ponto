@@ -27,8 +27,9 @@ build:
     - apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
     - apt-get install -y curl gnupg apt-transport-https
     - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    - sudo apt-get update
-    - apt-get install -y --no-install-recommends wine nodejs
+    - apt-get update
+    - apt-get update && apt-get install --install-recommends wine-devel
+    - apt-get install -y --no-install-recommends nodejs
     - npm i
     - npm run package-windows
     - npm run package-mac
