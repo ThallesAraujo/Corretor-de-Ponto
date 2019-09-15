@@ -24,10 +24,14 @@ build:
   script:
     - apt-get update
     - apt-get install -y software-properties-common
-    - apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ trusty main'
+    - dpkg --add-architecture i386
+    - wget -nc https://dl.winehq.org/wine-builds/winehq.key
+    - apt-key add winehq.key
+    - apt-add-repository https://dl.winehq.org/wine-builds/debian/
     - apt-get install -y curl gnupg apt-transport-https
     - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    - apt-get update && apt-get install --install-recommends wine-devel
+    - apt-get update
+    - apt-get install -y --install-recommends winehq-stable
     - apt-get install -y --no-install-recommends nodejs
     - npm i
     - npm run package-windows
