@@ -28,7 +28,7 @@ build:
     - apt-get install -y wget
     - wget -nc https://dl.winehq.org/wine-builds/winehq.key
     - apt-key add winehq.key
-    - apt-add-repository https://dl.winehq.org/wine-builds/debian/
+    - apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ trusty main'
     - apt-get install -y curl gnupg apt-transport-https
     - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     - apt-get update
