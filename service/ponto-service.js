@@ -212,7 +212,7 @@ switchTabs = (active, ...inactives) =>{
 
 exibirPreviewPlanilha = () => {
     exibicaoAtiva = exibirPreviewPlanilha;
-    carregarPontosPlanilha();
+    carregarPontosPlanilha(true);
     let exibicao = '<table style="color: white">';
     pontos.forEach(ponto =>{
         exibicao += criarLinhaPreviewPlanilha(ponto);
