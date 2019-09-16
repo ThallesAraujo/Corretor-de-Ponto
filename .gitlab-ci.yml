@@ -1,0 +1,36 @@
+stages:
+  - build
+  - deploy
+
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r release-builds/* .public
+    - mv .public public
+  dependencies:
+    - build
+  artifacts:
+    paths:
+      - public/*mac*
+      - public/*win*
+      - public/*linux*
+  only:
+    - master
+
+build:
+  image: corretor-ponto
+  stage: build
+  script:
+    - npm i
+    - npm run package-windows
+    - npm run package-mac
+    - npm run package-linux
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - release-builds/*win*
+      - release-builds/*mac*
+      - release-builds/*linux*
+  only:
+    - master
