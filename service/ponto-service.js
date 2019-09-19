@@ -34,6 +34,25 @@ $('#btnConverterPlanilha').click(() => {
     win.show();
 })
 
+
+abrirPortalHoras = () =>{
+    let win = new BrowserWindow({ width: 1500, height: 800 })
+    win.loadURL('http://portalhoras.stefanini.com/');
+
+    let contents = win.webContents;
+    console.log(contents)
+    win.show();
+}
+
+abrirOutlook = () =>{
+    let win = new BrowserWindow({ width: 1500, height: 800 })
+    win.loadURL('https://outlook.office.com/mail/inbox');
+
+    let contents = win.webContents;
+    console.log(contents)
+    win.show();
+}
+
 removerPontosInvalidos = (weekends) => {
     if(!weekends){
         pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && ponto[1]['valor'] === '(N)');
@@ -239,4 +258,14 @@ exibirInconsistencias = () => {
     divPontos.html(exibicao);
     console.log('Inconsistencias', inconsistencias);
     switchTabs(guiaInconsistencias, guiaTdsPontos, guiaPreview);
+}
+
+showSidebar = () =>{
+    document.getElementById('sidebar').classList.remove('hide-sidebar');
+    document.getElementById('sidebar').classList.add('show-sidebar');
+}
+
+hideSidebar = () =>{
+    document.getElementById('sidebar').classList.add('hide-sidebar');
+    document.getElementById('sidebar').classList.remove('show-sidebar');
 }

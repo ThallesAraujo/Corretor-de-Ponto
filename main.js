@@ -5,7 +5,6 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 let mainWindow;
 
-
 app.on('ready', function() {
     
     mainWindow = new BrowserWindow({width: 1350, height: 760, webPreferences: {webSecurity: false,plugins:
