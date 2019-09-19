@@ -34,8 +34,12 @@ $('#btnConverterPlanilha').click(() => {
     win.show();
 })
 
-removerPontosInvalidos = () => {
-    pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && ponto[1]['valor'] === '(N)');
+removerPontosInvalidos = (weekends) => {
+    if(!weekends){
+        pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && ponto[1]['valor'] === '(N)');
+    }else{
+        pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && (ponto[1]['valor'] === '(N)' || ponto[1]['valor'] === '(C)' || ponto[1]['valor'] === '(F)'));
+    }
     console.log('Lista de pontos válidos', pontos);
 }
 
@@ -62,7 +66,7 @@ function carregarPlanilha() {
     });
 }
 
-carregarPontosPlanilha = () => {
+carregarPontosPlanilha = (weekends) => {
     pontos  = [];
     var planilha = wb.Sheets.Sheet1;
             console.log('Workbook', planilha);
@@ -91,7 +95,7 @@ carregarPontosPlanilha = () => {
                 cellCont++;
                 cont = 0;
             }
-            removerPontosInvalidos();
+            removerPontosInvalidos(weekends);
 
 }
 
@@ -136,7 +140,7 @@ alternarExibicao = () =>{
 
 exibirTodosOsPontos = () => {
     exibicaoAtiva = exibirTodosOsPontos;
-    carregarPontosPlanilha();
+    carregarPontosPlanilha(true);
     let exibicao = '';
     pontos.forEach(ponto => {
         if(exibicaoCompleta){
@@ -208,7 +212,7 @@ switchTabs = (active, ...inactives) =>{
 
 exibirPreviewPlanilha = () => {
     exibicaoAtiva = exibirPreviewPlanilha;
-    carregarPontosPlanilha();
+    carregarPontosPlanilha(true);
     let exibicao = '<table style="color: white">';
     pontos.forEach(ponto =>{
         exibicao += criarLinhaPreviewPlanilha(ponto);
