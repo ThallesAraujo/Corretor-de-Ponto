@@ -27,7 +27,7 @@ $('#btnCarregar').click(() => {
 
 $('#btnConverterPlanilha').click(() => {
     let win = new BrowserWindow({ width: 1500, height: 800 })
-    win.loadURL('https://www.docspal.com/convert/xls-to-xlsx');
+    win.loadURL('https://products.groupdocs.app/conversion');
 
     let contents = win.webContents;
     console.log(contents)
