@@ -32,7 +32,7 @@ function carregarPlanilha() {
         properties: ['openFile'],
         filters: [{ name: 'Documents', extensions: ['*'] }]
     }, function (files) {
-        if (files !== undefined) {
+        if (files) {
             console.log('Files', files[0]);
 
             var dados = undefined

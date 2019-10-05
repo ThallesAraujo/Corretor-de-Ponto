@@ -16,12 +16,12 @@ function converterPlanilha(planilha, parentCallback){
         var apiInstance = new CloudmersiveConvertApiClient.ConvertDataApi();
 
         var inputFile = Buffer.from(fs.readFileSync(planilha).buffer);
-        apiInstance.convertDataXlsToJson(inputFile, async (error, data, response) => {
+        apiInstance.convertDataXlsToJson(inputFile, (error, data, response) => {
             if (error) {
                 console.error('Cloudmersive Error',error);
             } else {
                 console.log('API called successfully.');
-                planilhaJson = await data
+                planilhaJson = data
                 parentCallback(planilhaJson)
             }
         });
@@ -49,13 +49,12 @@ function criarPlanilha(data){
         }
     }
 
+    planilha["!ref"] = `A1:K${data.length+1}`
+
     var wb = {
         SheetNames: ["Sheet1"],
         Sheets: {
-            Sheet1: {
-              "!ref":`A1:K${data.length+1}`,
-              ...planilha
-            }
+            Sheet1: planilha
           }
     }
     wb.cellStyles = true;
