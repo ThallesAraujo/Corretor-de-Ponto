@@ -7,7 +7,8 @@
 </head>
 
 <body>
-
+    <div class="message" id="message"></div>
+    <div id="spinner" class="spinner" hidden="true"></div>
   <i class="fas fa-bars" onclick="showSidebar()"  style="font-size: 25px; padding: 1%; color: #6ca55d; cursor: pointer;"></i>
   <div id="sidebar" class="hide-sidebar">
       <div class="close-container">
@@ -17,19 +18,14 @@
     <p style="cursor: pointer" onclick="abrirPortalHoras()"><i class="fas fa-clock" style="padding-right: 10px; color: #6ca55d;"></i>Portal Horas</p>
     <p style="cursor: pointer" onclick="abrirOutlook()"><i class="far fa-envelope" style="padding-right: 10px; color: #6ca55d;"></i></i>Outlook</p>
   </div>
-
-  <div class="message" id="message"></div>
-  <div id="spinner" class="spinner" style="display:none"></div>
   <div id="content" class="container">
     <form>
 
       <div id="inicio" style="text-align: center; padding-top: 15%;">
         <i class="fa fa-clock" style="font-size: 100px; color: #6ca55d"></i>
         <h1 class="feature-title">Bem vindo ao Corretor de Ponto!</h1>
-        <p>Para começar, converta o arquivo de planilha do Portal Horas ou,
-          caso já o tenha feito, carregue-o para a detecção das inconsistências</p>
+        <p>Para começar, selecione a planilha gerada pelo Portal Horas. Caso ainda não tenha baixado, acesse o Portal Horas pela webview do menu lateral.</p>
         <div style="text-align: center">
-          <input class="btn" id="btnConverterPlanilha" type="button" value="Converter Planilha"></input>
           <input class="btn" id="btnCarregar" type="button" value="Carregar Planilha"></input>
         </div>
 
@@ -62,7 +58,8 @@
 </body>
 <script>
   require('./ajuste-ponto-template.js');
-  require('../service/ponto-service.js');
+  require('../controllers/ponto.controller.js');
+  require('../controllers/sidebar.controller.js');
 </script>
 
 </html>

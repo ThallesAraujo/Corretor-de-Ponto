@@ -208,9 +208,9 @@ input:active, input:focus {
 }
 
 .spinner {
-  border: 10px solid rgb(40, 69, 159);
+  border: 10px solid rgb(154, 181, 100);
   border-radius: 50%;
-  border-top: 10px solid #69FF97;
+  border-top: 10px solid rgb(78, 116, 89);
   width: 120px;
   height: 120px;
   position: absolute;
