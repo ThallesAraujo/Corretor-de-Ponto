@@ -17,7 +17,6 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.2",
     "cloudmersive-convert-api-client": "^2.0.8",
-    "electron": "^6.0.11",
     "encoding": "^0.1.12",
     "inputmask": "^4.0.8",
     "jquery": "^3.4.0",
