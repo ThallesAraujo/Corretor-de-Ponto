@@ -34,11 +34,10 @@ function carregarPlanilha() {
     }, function (files) {
         if (files) {
             console.log('Files', files[0]);
-
             var dados = undefined
             spinner.attr('hidden', false)
             content.addClass('spinner-blur');
-            console.log(JSON.stringify(planilhaService.converterPlanilha(files[0], (data) => dados = data)))
+            planilhaService.converterPlanilha(files[0], (data) => dados = data)
             setTimeout(() => {
                 spinner.attr('hidden', true)
                 content.removeClass('spinner-blur')
@@ -163,7 +162,18 @@ exibirPreviewPlanilha = () => {
 exibirInconsistencias = () => {
     exibicaoAtiva = exibirInconsistencias;
     let exibicao = '';
-    let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
+    pontos = planilhaService.removerPontosInvalidos(pontos, false);
+    for(i = 0; i < pontos.length; i++){
+        for(pontoCol = 2; pontoCol < 10; pontoCol++){
+            if(pontos[i][pontoCol].valor !== 'Sem Ponto'){
+                pontos[i]['marcacoesPonto'] = pontos[i]['marcacoesPonto']? pontos[i]['marcacoesPonto']+ 1: 1
+            }else{
+                pontos[i]['marcacoesPonto'] = pontos[i]['marcacoesPonto']? pontos[i]['marcacoesPonto'] : 0 
+            }
+        }
+    }
+
+    let inconsistencias = pontos.filter(ponto => ponto.marcacoesPonto == 0 || ponto.marcacoesPonto%2 !== 0)
     inconsistencias.forEach(ponto => {
         if (exibicaoCompleta) {
             exibicao += pontoTemplate.criarExibicaoOitoPontos(ponto);

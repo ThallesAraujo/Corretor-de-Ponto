@@ -2,9 +2,9 @@ const XLSX = require('xlsx-style');
 var fs = require('fs');
 var dialog = require('electron').remote.dialog;
 
-//Cloudmersive API
 var CloudmersiveConvertApiClient = require('cloudmersive-convert-api-client');
 var defaultClient = CloudmersiveConvertApiClient.ApiClient.instance;
+var apiInstance = new CloudmersiveConvertApiClient.ConvertDataApi();
 var Apikey = defaultClient.authentications['Apikey'];
 Apikey.apiKey = '895356b6-ba0f-4283-a534-ed077794e7ef';
 
@@ -12,8 +12,6 @@ var planilhaJson = undefined
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 
 function converterPlanilha(planilha, parentCallback){
-   
-        var apiInstance = new CloudmersiveConvertApiClient.ConvertDataApi();
 
         var inputFile = Buffer.from(fs.readFileSync(planilha).buffer);
         apiInstance.convertDataXlsToJson(inputFile, (error, data, response) => {
@@ -43,7 +41,7 @@ formatString = (toFormat) =>{
 function criarPlanilha(data){
     var planilha = {}
     console.log('Dados recebidos', data)
-    for(cont = 0; cont < planilhaJson.length; cont++){
+    for(cont = 0; cont < data.length; cont++){
         for(col = 0; col <colunas.length; col ++){
             planilha[`${colunas[col]}${cont+1}`] = {"v": formatString(data[cont][`UnnamedField${col}`])}
         }
@@ -73,12 +71,12 @@ function carregarPontosPlanilha (wb, weekends){
         while (cont < 11) {
             let celula = colunas[cont] + cellCont;
             ponto['isValido'] = true;
-            if (!planilha[celula] && cont === 1) {
+            if (!planilha[celula]['v'] && cont === 1) {
                 ponto['isValido'] = false;
-            };
+            }
 
             ponto[cont] = {
-                valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto',
+                valor: planilha[celula]['v'] ? planilha[celula]['v'] : 'Sem Ponto',
                 celula,
                 estilo: planilha[celula] && planilha[celula]['s'] !== undefined ? 'color: B51F1F; background-color: FCC3B3;' : 'border: 1px solid white'
             };
@@ -87,7 +85,6 @@ function carregarPontosPlanilha (wb, weekends){
         }
         if (ponto['isValido']) {
             pontos.push(ponto);
-            console.log('Ponto', ponto);
         }
         ponto = {};
         cellCont++;
@@ -133,6 +130,7 @@ function gravarNovaPlanilha(wb){
 removerPontosInvalidos = (pontos, weekends) => {
     if (!weekends) {
         pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && ponto[1]['valor'] === '(N)');
+        console.log('Pontos filtrados', pontos)
     } else {
         pontos = pontos.filter(ponto => !ponto[0]['valor'].includes('Banco Horas') && (ponto[1]['valor'] === '(N)' || ponto[1]['valor'] === '(C)' || ponto[1]['valor'] === '(F)'));
     }
@@ -167,5 +165,6 @@ module.exports = {
     criarPlanilha,
     carregarPontosPlanilha,
     gravarNovaPlanilha,
+    removerPontosInvalidos,
     corrigirPonto
 }
