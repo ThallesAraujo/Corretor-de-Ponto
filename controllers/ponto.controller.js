@@ -54,7 +54,7 @@ function carregarPlanilha() {
                 }else{
                     exibirMensagemErro("Não foi possível acessar o servico de conversão. Verifique sua conexão")
                 }
-            }, 10000)
+            }, 50000)
         }
     });
 }
