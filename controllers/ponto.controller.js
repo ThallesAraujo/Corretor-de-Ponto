@@ -13,7 +13,7 @@ const spinner = $('#spinner')
 const content = $('#content');
 var pontos = [];
 var exibicaoAtiva = () => { };
-var exibicaoCompleta = false;
+var exibicaoCompleta = true;
 var copiaPontos = [];
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 var wb;
@@ -121,11 +121,11 @@ marcarDebitoBancoHoras = (event) => {
 
     let cont = 2;
     while (cont < 10) {
-        corrigirPonto(colunas[cont] + linha, '');
+        planilhaService.corrigirPonto(wb, colunas[cont] + linha, '');
         cont++;
     }
 
-    corrigirPonto('K' + linha, 'Débito Banco Horas');
+    planilhaService.corrigirPonto(wb, 'K' + linha, 'Débito Banco Horas');
     exibicaoAtiva();
 }
 
