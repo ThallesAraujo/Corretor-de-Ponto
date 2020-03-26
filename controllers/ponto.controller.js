@@ -39,6 +39,7 @@ function carregarPlanilha() {
             content.addClass('spinner-blur');
             planilhaService.converterPlanilha(files[0], (data) => dados = data)
             setTimeout(() => {
+                console.log("dados ", dados)
                 spinner.attr('hidden', true)
                 content.removeClass('spinner-blur')
                 if (dados) {

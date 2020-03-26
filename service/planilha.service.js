@@ -1,12 +1,13 @@
 const XLSX = require('xlsx-style');
 var fs = require('fs');
 var dialog = require('electron').remote.dialog;
+var excel2json = require('excel2json-wasm')
 
 var CloudmersiveConvertApiClient = require('cloudmersive-convert-api-client');
 var defaultClient = CloudmersiveConvertApiClient.ApiClient.instance;
 var apiInstance = new CloudmersiveConvertApiClient.ConvertDataApi();
 var Apikey = defaultClient.authentications['Apikey'];
-Apikey.apiKey = '895356b6-ba0f-4283-a534-ed077794e7ef';
+Apikey.apiKey = '5c5a2947-8479-44b2-8bf4-83d99f82c76b';
 
 var planilhaJson = undefined
 var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
@@ -14,10 +15,32 @@ var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 function converterPlanilha(planilha, parentCallback){
 
         var inputFile = Buffer.from(fs.readFileSync(planilha).buffer);
+        console.log("file -> ", inputFile)
+
+        const worker = new Worker("worker.js");
+
+        worker.postMessage({
+            type: "convert",
+            data: inputFile
+        });
+
+        // worker.addEventListener("message", e => {
+        //     if (e.data.type === "ready"){
+        //         const data = e.data.data;
+        //         const styles = e.data.styles;
+        
+        //         //json data is ready
+        //         console.log("dataExcel2Json", data, styles)
+        //         parentCallback(data)
+        //     }
+        // });
+
         apiInstance.convertDataXlsToJson(inputFile, (error, data, response) => {
             if (error) {
                 console.error('Cloudmersive Error',error);
             } else {
+                console.log("Cloudmersive data", data)
+                console.log("Cloudmersive response", response)
                 console.log('API called successfully.');
                 planilhaJson = data
                 parentCallback(planilhaJson)
