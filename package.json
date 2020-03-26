@@ -17,8 +17,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.2",
     "cloudmersive-convert-api-client": "^2.0.8",
-    "electron": "^1.4.13",
+    "electron": "^6.1.9",
     "encoding": "^0.1.12",
+    "excel2json-wasm": "^1.0.2",
     "inputmask": "^4.0.8",
     "jquery": "^3.4.0",
     "twilio": "^3.30.2",
