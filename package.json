@@ -15,6 +15,7 @@
     "electron-prebuilt": "^1.4.13"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.2",
     "inputmask": "^4.0.8",
     "jquery": "^3.4.0",
     "twilio": "^3.30.2",

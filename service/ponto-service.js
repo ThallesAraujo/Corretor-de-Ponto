@@ -1,32 +1,28 @@
 const BrowserWindow = require('electron').remote.BrowserWindow;
 const XLSX = require('xlsx-style');
 var $ = require('jquery')
-var Inputmask = require('inputmask');
 var dialog = require('electron').remote.dialog;
+const criarExibicaoPonto = require('../view/ajuste-ponto-template.js').criarExibicaoPonto;
+const criarLinhaPreviewPlanilha = require('../view/ajuste-ponto-template.js').criarLinhaPreviewPlanilha;
+const criarExibicaoOitoPontos = require('../view/ajuste-ponto-template.js').criarExibicaoOitoPontos;
 
-const telefone = $('#telefone');
 const divPontos = $('#pontos');
+const telaPontos = $('#tela-pontos');
+const guiaTdsPontos = $('#guia-tds-pontos');
+const guiaInconsistencias = $('#guia-inconsistencias');
+const guiaPreview = $('#guia-preview-planilha')
 const inicio = $('#inicio');
 var pontos = [];
-var pontosCorrigidos = [];
-var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+var exibicaoAtiva = () =>{};
+var exibicaoCompleta = false;
+var copiaPontos = [];
+var colunas = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 var wb;
-
-var mascara = new Inputmask("(99)9999-9999");
-mascara.mask(telefone);
-
-telefone.keyup(function (event) {
-    if (event.keyCode === 13) {
-        enviarMensagem();
-    }
-});
 
 
 $('#btnCarregar').click(() => {
     carregarPlanilha();
 })
-
-
 
 
 $('#btnConverterPlanilha').click(() => {
@@ -44,6 +40,7 @@ removerPontosInvalidos = () => {
 }
 
 function carregarPlanilha() {
+    pontos  = [];
 
     dialog.showOpenDialog({
         properties: ['openFile'],
@@ -53,21 +50,37 @@ function carregarPlanilha() {
             console.log('Files', files[0]);
             wb = XLSX.readFile(files[0]);
             wb.cellStyles = true;
-            var planilha = wb.Sheets.Sheet1;
+            carregarPontosPlanilha();
+            inicio.hide();
+            telaPontos.attr('hidden', false);
+            divPontos.show();
+            if(!copiaPontos.length){
+                copiaPontos = pontos;
+            }
+            exibirInconsistencias();
+        }
+    });
+}
+
+carregarPontosPlanilha = () => {
+    pontos  = [];
+    var planilha = wb.Sheets.Sheet1;
             console.log('Workbook', planilha);
             cellCont = 16;
             let ponto = {};
             let cont = 0;
             while (cellCont < 50) {
-                while (cont < 6) {
+                while (cont < 11) {
                     let celula = colunas[cont] + cellCont;
                     ponto['isValido'] = true;
                     if (!planilha[celula] && cont === 1) {
                         ponto['isValido'] = false;
                     };
 
-                    ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', celula };
-
+                    ponto[cont] = { valor: planilha[celula] ? planilha[celula]['v'] : 'Sem Ponto', 
+                    celula , 
+                    estilo: planilha[celula] && planilha[celula]['s'] !== undefined ?'color: B51F1F; background-color: FCC3B3;': 'border: 1px solid white'};
+                    ponto['linha'] = celula.substring(1,3);
                     cont++;
                 }
                 if (ponto['isValido']) {
@@ -79,9 +92,7 @@ function carregarPlanilha() {
                 cont = 0;
             }
             removerPontosInvalidos();
-            exibirInconsistencias();
-        }
-    });
+
 }
 
 gravarNovaPlanilha = () =>{
@@ -103,27 +114,6 @@ gravarNovaPlanilha = () =>{
     wb.Sheets.Sheet1['!cols'] = wscols;
 
     wb.cellStyles = true;
-    pontosCorrigidos.forEach(ponto => {
-        let linhaPonto = ponto['celula'].substring(1, 3);
-        wb.Sheets.Sheet1['A' + linhaPonto] = { 
-            'v': wb.Sheets.Sheet1['A' + linhaPonto]['v'], 
-            's': { 
-                font: { color: { rgb: 'FFB51F1F' } }, 
-                fill: { fgColor: { rgb: "FFFCC3B3"}}},
-            };
-        
-        wb.Sheets.Sheet1[ponto['celula']] = { 
-            'v': ponto['valor'], 
-            's': { 
-                font: { color: { rgb: 'FFB51F1F' } }, 
-                fill: { fgColor: { rgb: "FFFCC3B3" } } },
-                alignment: { wrapText: true }
-            };
-
-
-        console.log('célula atual da planilha', wb.Sheets.Sheet1[ponto['celula']]['v']);
-        console.log('célula ponto corrigido', ponto['valor']);
-    })
 
 
     dialog.showSaveDialog(filename => {
@@ -138,22 +128,28 @@ gravarNovaPlanilha = () =>{
 
 }
 
+alternarExibicao = () =>{
+    exibicaoCompleta = !exibicaoCompleta;
+    $('#btnAlternarExibicao').attr('title', exibicaoCompleta? 'Alternar p/ Exibição Simplificada': 'Alternar p/ Exibição Completa');
+    exibicaoAtiva();
+}
+
 exibirTodosOsPontos = () => {
-    let exibicao = '<h1 class="feature-title">Todos os Pontos</h1>';
+    exibicaoAtiva = exibirTodosOsPontos;
+    carregarPontosPlanilha();
+    let exibicao = '';
     pontos.forEach(ponto => {
-        exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
-                        <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-calendar" style="margin-right: 10px"></i> ${ponto[0]['valor']}</h3>
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[2]['celula']}" type='text' value="${ponto[2]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[3]['celula']}" type='text' value="${ponto[3]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[4]['celula']}" type='text' value="${ponto[4]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[5]['celula']}" type='text' value="${ponto[5]['valor']}">
-                        <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
-                     </div>`;
+        if(exibicaoCompleta){
+            exibicao += criarExibicaoOitoPontos(ponto);
+        }else{
+            exibicao += criarExibicaoPonto(ponto);
+        }
     });
 
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
-    inicio.hide();
+    switchTabs(guiaTdsPontos, guiaInconsistencias, guiaPreview);
+    
 }
 
 setarNovoPonto = (event) => {
@@ -170,37 +166,73 @@ marcarDebitoBancoHoras = (event) => {
         cont++;
     }
 
-    pontosCorrigidos.push({ celula: 'K' + linha, valor: 'Débito Banco Horas' });
+    corrigirPonto('K' + linha,'Débito Banco Horas');
     $(`#div${event.target.id}`).hide();
 }
 
 corrigirPonto = (celula, novoValor) => {
-    let indicePonto = pontosCorrigidos.indexOf(pontosCorrigidos.find(ponto => ponto.celula === celula));
-    let pontoCorrigido = { celula, valor: novoValor };
-    if (indicePonto > -1) {
-        pontosCorrigidos[indicePonto] = pontoCorrigido;
-    } else {
-        pontosCorrigidos.push(pontoCorrigido);
-    }
-    console.log('Novo ponto', { celula: event.target.id, valor: novoValor });
-    console.log('Pontos corrigidos', pontosCorrigidos);
+    let linhaPonto = celula.substring(1,3);
+    wb.Sheets.Sheet1['A' + linhaPonto] = { 
+        'v': wb.Sheets.Sheet1['A' + linhaPonto]['v'], 
+        's': { 
+            font: { color: { rgb: 'FFB51F1F' } }, 
+            fill: { fgColor: { rgb: "FFFCC3B3"}}},
+        };
+
+    
+    wb.Sheets.Sheet1[celula] = { 
+        'v': novoValor, 
+        's': { 
+            font: { color: { rgb: 'FFB51F1F' } }, 
+            fill: { fgColor: { rgb: "FFFCC3B3" } } },
+            alignment: { wrapText: true }
+        };
+
+        console.log(wb.Sheets.Sheet1[celula]);
+    
+}
+
+voltarInicio = (event) => {
+    divPontos.hide();
+    divPontos.html('');
+    telaPontos.attr('hidden', true);
+    inicio.show();
+}
+
+switchTabs = (active, ...inactives) =>{
+    active.addClass('tab-active').removeClass('tab-inactive');
+    inactives.forEach(inactive =>{
+        inactive.removeClass('tab-active').addClass('tab-inactive');
+    })
+}
+
+exibirPreviewPlanilha = () => {
+    exibicaoAtiva = exibirPreviewPlanilha;
+    carregarPontosPlanilha();
+    let exibicao = '<table style="color: white">';
+    pontos.forEach(ponto =>{
+        exibicao += criarLinhaPreviewPlanilha(ponto);
+    });
+
+    exibicao += '</table>'
+    switchTabs(guiaPreview, guiaInconsistencias, guiaTdsPontos);
+    divPontos.html(exibicao);
+    console.log(exibicao);
 }
 
 exibirInconsistencias = () => {
-    let exibicao = '<h1 class="feature-title">Inconsistências</h1>';
+    exibicaoAtiva = exibirInconsistencias;
+    let exibicao = '';
     let inconsistencias = pontos.filter(ponto => ponto[2]['valor'] === 'Sem Ponto' || ponto[3]['valor'] === 'Sem Ponto' || ponto[4]['valor'] === 'Sem Ponto' || ponto[5]['valor'] === 'Sem Ponto');
     inconsistencias.forEach(ponto => {
-        exibicao += `<div id="div${ponto[1]['celula']}" style="display: flex, margin: 15px">
-                        <h3 class="data-ponto" style="max-width: 20%"><i class="fa fa-calendar" style="margin-right: 10px"></i> ${ponto[0]['valor']}</h3>
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[2]['celula']}" type='text' value="${ponto[2]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[3]['celula']}" type='text' value="${ponto[3]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[4]['celula']}" type='text' value="${ponto[4]['valor']}">
-                        <input onKeyUp="setarNovoPonto(event)" style="max-width: 15%" id="${ponto[5]['celula']}" type='text' value="${ponto[5]['valor']}">
-                        <input id="${ponto[1]['celula']}" class="btn-debito-bh" onClick="marcarDebitoBancoHoras(event)"  type="button" value="Marcar Débito Banco Horas"></input>
-                     </div>`;
+        if(exibicaoCompleta){
+            exibicao += criarExibicaoOitoPontos(ponto);
+        }else{
+            exibicao += criarExibicaoPonto(ponto);
+        }
     });
-
     exibicao += `<input class="btn" onClick="gravarNovaPlanilha()" type="button" value="Gerar planilha de pontos"></input>`;
     divPontos.html(exibicao);
-    inicio.hide();
+    console.log('Inconsistencias', inconsistencias);
+    switchTabs(guiaInconsistencias, guiaTdsPontos, guiaPreview);
 }
