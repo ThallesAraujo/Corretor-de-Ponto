@@ -17,7 +17,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.2",
     "inputmask": "^4.0.8",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "twilio": "^3.30.2",
     "xlsx-style": "^0.8.13"
   }
